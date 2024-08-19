@@ -1,29 +1,29 @@
 <?php
-function validateForm($name, $email, $subject, $messaje)
+function validateForm($name, $email, $subject, $message)
 {
-    return !empty($name) && !empty($email) && !empty($subject) && !empty($messaje) && !empty($form);
+    return !empty($name) && !empty($email) && !empty($subject) && !empty($message);         
 }
 
 $status = '';
 
+
 // Comprobamos si el formulario fue enviado
 if (isset($_POST['form'])) {
+    
     // Invocamos función para validar y con el unpacking array le pasamos los parametros solicitados a la función
-    if (validateForm($_POST['name'], $_POST['email'], $_POST['subject'], $_POST['message'])) {
-        print_r($_POST);
+    if (validateForm($_POST['name'], $_POST['email'], $_POST['subject'], $_POST['message'], $_POST['form'])) {               
         // Sanitizando los datos
-        $name = htmlentities($_POST['name']);
+        $name = htmlspecialchars($_POST['name']);
         $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
-        $subject = htmlentities($_POST['subject']);
-        $message = htmlentities($_POST['message']);
-
+        $subject = htmlspecialchars($_POST['subject']);
+        $message = htmlspecialchars($_POST['message']);
+        
         $status = "success";
     } else {
         $status = "error";
     }
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -40,18 +40,17 @@ if (isset($_POST['form'])) {
 
 <body>
 
-    <?php if ($status == "danger"): ?>
+    <?php if ($status == "error"): ?>
         <div class='alert_container_danger'>
-            <span class="alert_messaje">¡Surgio un problema!</span>
+            <span class="alert_message">¡Surgió un problema!</span>
         </div>
     <?php endif; ?>
 
     <?php if ($status == "success"): ?>
         <div class="alert_container_success">
-            <span class="alert_messaje">¡Mensaje enviado con éxito!</span>
+            <span class="alert_message">¡Mensaje enviado con éxito!</span>
         </div>
     <?php endif; ?>
-
 
     <form action="" method="POST">
         <h1>¡Contáctanos!</h1>
@@ -68,9 +67,8 @@ if (isset($_POST['form'])) {
             <input type="text" name="subject" value='Firma electronica'>
         </div>
         <div class="input_group">
-            <label for="messaje">Mensaje:</label>
-            <textarea type="text" name="messaje">Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse omnis temporibus aspernatur fugit ipsam quo sint neque id officia.
-            </textarea>
+            <label for="message">Mensaje:</label>
+            <textarea name="message">Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse omnis temporibus aspernatur fugit ipsam quo sint neque id officia.</textarea>
         </div>
         <div class="button_container">
             <button type="submit" name="form">Enviar</button>
@@ -83,9 +81,13 @@ if (isset($_POST['form'])) {
             <div class="number_container">
                 <span> +593 981464552 - Sinfoec</span>
             </div>
-
         </div>
     </form>
+
+    <script>
+        // Imprime el mensaje de error en la consola del navegador
+        console.error(<?php echo json_encode($error); ?>);
+    </script>
 </body>
 
 </html>
