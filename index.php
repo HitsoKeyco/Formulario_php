@@ -1,4 +1,6 @@
 <?php
+
+include 'mail.php';
 function validateForm($name, $email, $subject, $message)
 {
     return !empty($name) && !empty($email) && !empty($subject) && !empty($message);         
@@ -6,10 +8,8 @@ function validateForm($name, $email, $subject, $message)
 
 $status = '';
 
-
 // Comprobamos si el formulario fue enviado
-if (isset($_POST['form'])) {
-    
+if (isset($_POST['form'])) {    
     // Invocamos función para validar y con el unpacking array le pasamos los parametros solicitados a la función
     if (validateForm($_POST['name'], $_POST['email'], $_POST['subject'], $_POST['message'], $_POST['form'])) {               
         // Sanitizando los datos
@@ -17,12 +17,13 @@ if (isset($_POST['form'])) {
         $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
         $subject = htmlspecialchars($_POST['subject']);
         $message = htmlspecialchars($_POST['message']);
-        
-        $status = "success";
+        $body =  "<p>Hola esta es una prueba de mensaje</p>";
+        $status = sendMail($subject, $body, $email, $name, true);       
     } else {
         $status = "error";
     }
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -52,23 +53,23 @@ if (isset($_POST['form'])) {
         </div>
     <?php endif; ?>
 
-    <form action="" method="POST">
+    <form action="" method="POST">        
         <h1>¡Contáctanos!</h1>
         <div class="input_group">
             <label for="name">Nombre:</label>
-            <input type="text" name='name' value='Sergio'>
+            <input type="text" name='name'>
         </div>
         <div class="input_group">
             <label for="email">Correo:</label>
-            <input type="email" name='email' placeholder="name@example.com" value='olivosergio09@gmail.com'>
+            <input type="email" name='email' placeholder="name@example.com">
         </div>
         <div class="input_group">
             <label for="subject">Asunto:</label>
-            <input type="text" name="subject" value='Firma electronica'>
+            <input type="text" name="subject" >
         </div>
         <div class="input_group">
             <label for="message">Mensaje:</label>
-            <textarea name="message">Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse omnis temporibus aspernatur fugit ipsam quo sint neque id officia.</textarea>
+            <textarea name="message"></textarea>
         </div>
         <div class="button_container">
             <button type="submit" name="form">Enviar</button>
@@ -84,10 +85,6 @@ if (isset($_POST['form'])) {
         </div>
     </form>
 
-    <script>
-        // Imprime el mensaje de error en la consola del navegador
-        console.error(<?php echo json_encode($error); ?>);
-    </script>
 </body>
 
 </html>
