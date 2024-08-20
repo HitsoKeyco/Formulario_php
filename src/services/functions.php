@@ -1,5 +1,7 @@
 <?php
-require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . 'vendor/autoload.php';
+
+print_r(__DIR__ . 'vendor/autoload.php');
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -11,8 +13,7 @@ $dotenv->load();
 
 function sendMail($subject, $body, $email, $name, $html = false)
 {
-    $mail = new PHPMailer(true); // Instancia de PHPMailer
-    
+    $mail = new PHPMailer(true); // Instancia de PHPMailer    
     try {
         // Configuración del servidor SMTP
         $mail->isSMTP();
@@ -41,3 +42,10 @@ function sendMail($subject, $body, $email, $name, $html = false)
          return 'error';
     }
 }
+
+//Validar Formulario
+function validateForm($name, $email, $subject, $message) : bool
+{
+    return !empty($name) && !empty($email) && !empty($subject) && !empty($message);         
+}
+
